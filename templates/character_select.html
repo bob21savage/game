@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Character - D&D Adventure</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 40px 0;
+        }
+        .select-container {
+            background-color: #34495e;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        }
+        .character-card {
+            background-color: #2c3e50;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+        }
+        .character-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.9em;
+        }
+        .stat-list li {
+            margin-bottom: 5px;
+        }
+        .btn-primary {
+            background-color: #e74c3c;
+            border-color: #c0392b;
+        }
+        .btn-primary:hover {
+            background-color: #c0392b;
+            border-color: #a93226;
+        }
+        .class-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #e74c3c;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .progress {
+            height: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="select-container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Select Your Character</h2>
+                <a href="{{ url_for('create_character') }}" class="btn btn-primary">Create New Character</a>
+            </div>
+
+            <div class="row">
+                {% for character in characters %}
+                <div class="col-md-4">
+                    <div class="character-card">
+                        <div class="class-icon">
+                            {% if character.char_class == 'warrior' %}
+                            ⚔️
+                            {% elif character.char_class == 'mage' %}
+                            🔮
+                            {% else %}
+                            🗡️
+                            {% endif %}
+                        </div>
+                        <h4>{{ character.name }}</h4>
+                        <p>Level {{ character.level }} {{ character.char_class|title }}</p>
+                        
+                        <div class="progress">
+                            <div class="progress-bar bg-danger" role="progressbar" 
+                                 style="width: {{ (character.hp / character.max_hp) * 100 }}%">
+                            </div>
+                        </div>
+                        <small class="d-block mb-3">HP: {{ character.hp }}/{{ character.max_hp }}</small>
+
+                        <ul class="stat-list mb-3">
+                            <li>STR: {{ character.strength }}</li>
+                            <li>DEX: {{ character.dexterity }}</li>
+                            <li>CON: {{ character.constitution }}</li>
+                            <li>INT: {{ character.intelligence }}</li>
+                            <li>WIS: {{ character.wisdom }}</li>
+                            <li>CHA: {{ character.charisma }}</li>
+                        </ul>
+
+                        <form action="{{ url_for('select_character', character_id=character.id) }}" method="POST">
+                            {{ forms[character.id].csrf_token }}
+                            {{ forms[character.id].submit(class="btn btn-primary w-100") }}
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if not characters %}
+            <div class="text-center">
+                <h3>No Characters Found</h3>
+                <p>Create your first character to begin your adventure!</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

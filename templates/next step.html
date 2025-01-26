@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Adventure Continues</title>
+</head>
+<body>
+    <h1>You chose {{ choice }}</h1>
+    <p>{{ detail }}</p>
+
+    <p>What would you like to do next?</p>
+    <form action="/next_step" method="post">
+        {{ csrf_token() }}  <!-- Add this line -->
+        {% for next_step in next_steps.keys() %}
+            <button type="submit" name="continue" value="{{ next_step }}">{{ next_step }}</button>
+            <input type="hidden" name="decision_key" value="{{ choice }}">
+        {% endfor %}
+    </form>
+    <a href="/">Back to Choices</a>
+</body>
+</html>

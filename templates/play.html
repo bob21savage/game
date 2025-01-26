@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1>Choose Your Adventure</h1>
+    <form method="POST" action="{{ url_for('play') }}">
+        {{ form.csrf_token }}
+        <div class="form-group">
+            {{ form.choice.label }}
+            {{ form.choice(class="form-control") }}
+        </div>
+        <br>
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+</div>
+{% endblock %}

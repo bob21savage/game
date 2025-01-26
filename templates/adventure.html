@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Adventure</title>
+  </head>
+  <body>
+    <h1>Adventure</h1>
+    <p>Choose your next step:</p>
+    <ul>
+      {% for choice in choices %}
+        <li><a href="?choice={{ choice.choice_id }}">{{ choice.choice_text }}</a></li>
+      {% endfor %}
+    </ul>
+    <p>Gold: {{ character.gold }}</p>
+    <p>Health: {{ character.hp }}</p>
+  </body>
+</html>

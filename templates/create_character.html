@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Character - D&D Adventure</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 40px 0;
+        }
+        .creation-container {
+            background-color: #34495e;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        }
+        .class-card {
+            background-color: #2c3e50;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .class-card:hover {
+            border-color: #e74c3c;
+            transform: translateY(-5px);
+        }
+        .class-card.active {
+            border-color: #e74c3c;
+            background-color: #3d5871;
+        }
+        .stat-box {
+            background-color: #2c3e50;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .btn-primary {
+            background-color: #e74c3c;
+            border-color: #c0392b;
+        }
+        .btn-primary:hover {
+            background-color: #c0392b;
+            border-color: #a93226;
+        }
+        .form-control {
+            background-color: #2c3e50;
+            border-color: #2c3e50;
+            color: #ecf0f1;
+        }
+        .form-control:focus {
+            background-color: #2c3e50;
+            border-color: #e74c3c;
+            color: #ecf0f1;
+            box-shadow: 0 0 0 0.25rem rgba(231, 76, 60, 0.25);
+        }
+        .class-icon {
+            width: 50px;
+            height: 50px;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="creation-container">
+            <h2 class="text-center mb-4">Create Your Character</h2>
+            <form method="POST" action="{{ url_for('create_character') }}">
+                {{ form.csrf_token }}
+ 
+                <div class="mb-4">
+                    {{ form.name.label(class="form-label") }}
+                    {{ form.name(class="form-control") }}
+                </div>
+
+                <h4 class="mb-3">Choose Your Class</h4>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="class-card" onclick="selectClass('warrior')">
+                            <img src="{{ url_for('static', filename='warrior.png') }}" alt="Warrior" class="class-icon">
+                            <h5>Warrior</h5>
+                            <p>Strong and durable melee fighter</p>
+                            {{ form.char_class(value="warrior", type="radio", class="class-radio", id="warrior") }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="class-card" onclick="selectClass('mage')">
+                            <img src="{{ url_for('static', filename='mage.png') }}" alt="Mage" class="class-icon">
+                            <h5>Mage</h5>
+                            <p>Master of arcane magic</p>
+                            {{ form.char_class(value="mage", type="radio", class="class-radio", id="mage") }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="class-card" onclick="selectClass('rogue')">
+                            <img src="{{ url_for('static', filename='rogue.png') }}" alt="Rogue" class="class-icon">
+                            <h5>Rogue</h5>
+                            <p>Stealthy and agile fighter</p>
+                            {{ form.char_class(value="rogue", type="radio", class="class-radio", id="rogue") }}
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="mb-3">Character Stats</h4>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stat-box">
+                            <h6>Strength</h6>
+                            <p id="strength">Roll for stats</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-box">
+                            <h6>Dexterity</h6>
+                            <p id="dexterity">Roll for stats</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-box">
+                            <h6>Constitution</h6>
+                            <p id="constitution">Roll for stats</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-box">
+                            <h6>Intelligence</h6>
+                            <p id="intelligence">Roll for stats</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-box">
+                            <h6>Wisdom</h6>
+                            <p id="wisdom">Roll for stats</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-box">
+                            <h6>Charisma</h6>
+                            <p id="charisma">Roll for stats</p>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" id="strength_val" name="strength" required>
+                <input type="hidden" id="dexterity_val" name="dexterity" required>
+                <input type="hidden" id="constitution_val" name="constitution" required>
+                <input type="hidden" id="intelligence_val" name="intelligence" required>
+                <input type="hidden" id="wisdom_val" name="wisdom" required>
+                <input type="hidden" id="charisma_val" name="charisma" required>
+
+                <div class="text-center mt-4">
+                    <button type="button" class="btn btn-secondary me-2" onclick="rollStats()">Roll Stats</button>
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function selectClass(className) {
+            // Remove active class from all cards
+            document.querySelectorAll('.class-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Add active class to selected card
+            const selectedCard = document.querySelector(`.class-card:has(#${className})`);
+            if (selectedCard) {
+                selectedCard.classList.add('active');
+            }
+            
+            // Select the radio button
+            document.getElementById(className).checked = true;
+        }
+
+        function rollDice(sides) {
+            return Math.floor(Math.random() * sides) + 1;
+        }
+
+        function rollStat() {
+            // Roll 4d6, drop lowest
+            let rolls = [];
+            for (let i = 0; i < 4; i++) {
+                rolls.push(rollDice(6));
+            }
+            rolls.sort((a, b) => b - a);
+            return rolls.slice(0, 3).reduce((a, b) => a + b, 0);
+        }
+
+        function rollStats() {
+            const stats = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
+            
+            stats.forEach(stat => {
+                const value = rollStat();
+                document.getElementById(stat).textContent = value;
+                document.getElementById(stat + '_val').value = value;
+            });
+        }
+
+        // Roll initial stats
+        rollStats();
+    </script>
+</body>
+</html>

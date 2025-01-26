@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Inventory</title>
+  </head>
+  <body>
+    <h1>Inventory</h1>
+    <p>Choose your item:</p>
+    <ul>
+      {% for item in items %}
+        <li>
+          <a href="#" onclick="document.getElementById('{{ item.id }}').click()">{{ item.item_name }}</a>
+          <input type="radio" id="{{ item.id }}" name="item_id" value="{{ item.id }}">
+        </li>
+      {% endfor %}
+    </ul>
+    <p>Gold: {{ character.gold }}</p>
+  </body>
+</html>
